@@ -1,5 +1,6 @@
 import jsYaml from "js-yaml";
 import { VTStyle } from '.'
+import { variableWalker } from "./walkers/variable";
 
 const isVTStyleValue = (object: any): object is VTStyle.Value => {
   return Array.isArray(object) ||
@@ -11,11 +12,6 @@ const isVTStyleValue = (object: any): object is VTStyle.Value => {
 }
 
 /**
- * noop walker to traverse and transform values.
- */
-const defaultWalker: VTStyle.Walker = (_key, value, _parent) => value;
-
-/**
  * Plugable YAML -> JSON Transpiler
  */
 export class VTStyleCore {
@@ -24,12 +20,16 @@ export class VTStyleCore {
   private json: string = ""
   private object: VTStyle.Value = null
 
+  static json2yaml = (json: string) => {
+    return jsYaml.dump(jsYaml.load(json, { schema: jsYaml.JSON_SCHEMA }))
+  }
+
   /**
    *
    * @param {string} yaml YAML format data
    * @param {function} walk
    */
-  constructor(yaml: string, walks: VTStyle.Walker | VTStyle.Walker[] = defaultWalker) {
+  constructor(yaml: string, walks: VTStyle.Walker | VTStyle.Walker[] = variableWalker) {
     this.yaml = yaml;
     if (Array.isArray(walks)) {
       this.walks = walks
@@ -87,3 +87,6 @@ export class VTStyleCore {
     return this.object
   }
 }
+
+// @ts-ignore
+global.window && (global.window.VTStyleCore = VTStyleCore)

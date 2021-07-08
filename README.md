@@ -2,19 +2,21 @@
 
 ## Usage
 
+```shell
+$ vt-style -h # show helps
 ```
-$ vt-style --help
 
-vt-style
+## Development
 
-  A command-line utility for Mapbox GL style.
+```shell
+$ npm test           # run tests
+$ npm run start:docs # start website
+$ npm run build      # build lib and website
+```
 
-Synopsis
+### Run with maputnik
 
-  $ vt-style <command> [options]
-
-Command List
-
-  init    Create a style.
-  start   Start a development server.
+```shell
+$ npm run watch                               # run the CLI in watch mode to create public/style.json
+$ maputnik --watch --file ./public/style.json # then run the maputnik to observe public/style.json
 ```

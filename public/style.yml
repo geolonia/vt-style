@@ -1,0 +1,3038 @@
+# ================== variables ==================
+
+## colors
+
+$background_color: rgba(254, 254, 254, 1)
+$water_color_0: rgba(152, 209, 252, 1)
+$water_color_200: rgba(2, 183, 237, 1)
+$water_color_1000: rgba(2, 170, 228, 1)
+$water_color_2000: rgba(3, 147, 212, 1)
+$water_color_3000: rgba(3, 136, 205, 1)
+$water_color_4000: rgba(4, 121, 195, 1)
+$water_color_5000: rgba(5, 99, 181, 1)
+$water_color_6000: rgba(6, 69, 161, 1)
+$water_color_7000: rgba(7, 45, 145, 1)
+$water_color_8000: rgba(8, 26, 132, 1)
+$water_color_9000: rgba(9, 9, 121, 1)
+$water_color_10000: rgba(17, 17, 136, 1)
+$glacier_color: rgba(241, 248, 254, 1)
+$forest_color: rgba(223, 236, 218, 1)
+$river_color: "#a0c8f0"
+$grass_color: "#d8e8c8"
+$wood_color: "#6a4"
+$water_label_color: "#74aee9"
+$water_label_halo_color: rgba(255, 255, 255, 0.7)
+$land_label_color: rgba(102, 102, 102, 1)
+$land_label_halo_color: rgba(255,255,255,0.8)
+
+## filter
+
+$is_ocean: ['==', [get, class], ocean]
+$is_polygon: ['==', $type, Polygon]
+$is_linestring: ['==', $type, LineString]
+
+## paint
+
+$bridge_casing_paint:
+  line-color: '#e9ac77'
+  line-opacity: 1
+  line-width:
+    base: 1.2
+    stops:
+    - [12, 1]
+    - [13, 3]
+    - [14, 4]
+    - [20, 15]
+
+$river_line_width:
+- interpolate
+- [exponential, 1.2]
+- [zoom]
+- 10
+- 0.8
+- 20
+- 6
+
+## layout
+
+$prefer_ja_text_field:
+- string
+- [get, name:ja]
+- [get, name]
+
+$text_size_large: 14
+$text_size_middle: 12
+$text_size_small: 10
+
+# ================== style ==================
+
+version: 8
+name: Geolonia Basic
+metadata: {}
+sprite: https://sprites.geolonia.com/basic
+glyphs: https://glyphs.geolonia.com/{fontstack}/{range}.pbf
+sources:
+  oceanus:
+    type: vector
+    url: https://tileserver.geolonia.com/oceanus/tiles.json?key=YOUR-API-KEY
+  geolonia-water:
+    type: vector
+    url: https://tileserver.geolonia.com/water/tiles.json?key=YOUR-API-KEY
+  geolonia:
+    type: vector
+    minzoom: 8
+    url: https://tileserver.geolonia.com/v2/tiles.json?key=YOUR-API-KEY
+layers:
+  - id: background
+    type: background
+    paint:
+      background-color: $background_color
+  - id: landcover-grass
+    type: fill
+    source: geolonia
+    source-layer: landcover
+    filter:
+      ['==', class, grass]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $grass_color
+      fill-opacity: 1
+  - id: landcover-wood
+    type: fill
+    source: geolonia
+    source-layer: landcover
+    filter:
+      ['==', class, wood]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $wood_color
+      fill-opacity: 0.2
+      fill-outline-color: hsla(0, 0%, 0%, 0.03)
+      fill-antialias:
+        base: 1
+        stops:
+          - [0, false]
+          - [9, true]
+  - id: landcover-grass-park
+    type: fill
+    source: geolonia
+    source-layer: park
+    filter:
+      ['==', class, public_park]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $grass_color
+      fill-opacity: 0.8
+  - id: water
+    type: fill
+    source: geolonia-water
+    source-layer: water
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_0
+  - id: water-river-lake-ja
+    type: fill
+    source: geolonia
+    source-layer: water
+    filter: ['==', [get, class], lake]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_0
+  - id: oc-ocean200
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 200]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_200
+  - id: oc-ocean1000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 1000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_1000
+  - id: oc-ocean2000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 2000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_2000
+  - id: oc-ocean3000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 3000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_3000
+  - id: oc-ocean4000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 4000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_4000
+  - id: oc-ocean5000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 5000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_5000
+  - id: oc-ocean6000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 6000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_6000
+  - id: oc-ocean7000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 7000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_7000
+  - id: oc-ocean8000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 8000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_8000
+  - id: oc-ocean9000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 9000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_9000
+  - id: oc-ocean10000
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    filter:
+      - all
+      - $is_ocean
+      - ['==', [get, subclass], 10000]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_10000
+  - id: oc-glacier
+    type: fill
+    source: oceanus
+    source-layer: oc-glacier
+    maxzoom: 8
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $glacier_color
+  - id: oc-forest
+    type: fill
+    source: oceanus
+    source-layer: oc-forest
+    minzoom: 5
+    maxzoom: 8
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $forest_color
+  - id: oc-waterway-river-ja
+    type: line
+    source: oceanus
+    source-layer: oc-waterway
+    minzoom: 4
+    maxzoom: 8
+    filter:
+      - all
+      - ['==', [get, class], river]
+      - ['!=', [get, brunnel], tunnel]
+      - [has, jflag]
+    layout:
+      line-cap: round
+    paint:
+      line-color: $river_color
+      line-width: $river_line_width
+  - id: oc-waterway-river
+    type: line
+    source: oceanus
+    source-layer: oc-waterway
+    minzoom: 4
+    filter:
+      - all
+      - ['==', [get, class], river]
+      - ['!=', [get, brunnel], tunnel]
+      - ['==', [has, jflag], false]
+    layout:
+      line-cap: round
+    paint:
+      line-color: $river_color
+      line-width: $river_line_width
+  - id: oc-waterway-name-ja
+    type: symbol
+    source: oceanus
+    source-layer: oc-waterway
+    minzoom: 6
+    maxzoom: 8
+    filter:
+      - all
+      - $is_linestring
+      - [has, name]
+      - [has, jflag]
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: line
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: oc-waterway-name
+    type: symbol
+    source: oceanus
+    source-layer: oc-waterway
+    minzoom: 6
+    filter:
+      - all
+      - [has, name]
+      - ['==', [has, jflag], false]
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: line
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: oc-lake-ja
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    minzoom: 4
+    maxzoom: 8
+    filter:
+      - all
+      - ['==', [get, class], lakes]
+      - [has, jflag]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_0
+  - id: oc-lake
+    type: fill
+    source: oceanus
+    source-layer: oc-water
+    minzoom: 4
+    filter:
+      - all
+      - ['==', [get, class], lakes]
+      - ['==', [has, jflag], false]
+    layout:
+      visibility: visible
+    paint:
+      fill-color: $water_color_0
+  - id: oc-highway-outer-ja
+    type: line
+    source: oceanus
+    source-layer: oc-road
+    minzoom: 5
+    maxzoom: 8
+    filter:
+      - all
+      - ['==', [get, class], highway]
+      - [has, jflag]
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 8
+            - 1.5
+          - - 20
+            - 17
+  - id: oc-highway-outer
+    type: line
+    source: oceanus
+    source-layer: oc-road
+    minzoom: 5
+    filter:
+      - all
+      - ['==', [get, class], highway]
+      - ['==', [has, jflag], false]
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 8
+            - 1.5
+          - - 20
+            - 17
+  - id: oc-highway-inner-ja
+    type: line
+    source: oceanus
+    source-layer: oc-road
+    minzoom: 5
+    maxzoom: 8
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - highway
+      - - has
+        - jflag
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 8
+            - 0.5
+          - - 20
+            - 13
+  - id: oc-highway-inner
+    type: line
+    source: oceanus
+    source-layer: oc-road
+    minzoom: 5
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - highway
+      - - '=='
+        - - has
+          - jflag
+        - false
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 8
+            - 0.5
+          - - 20
+            - 13
+  - id: oc-boundary-land-level-1-ja
+    type: line
+    source: oceanus
+    source-layer: oc-boundary
+    minzoom: 4
+    maxzoom: 8
+    filter:
+      - all
+      - - '=='
+        - - get
+          - admin_level
+        - 1
+      - - has
+        - jflag
+    layout:
+      line-join: round
+    paint:
+      line-color: '#9e9cab'
+      line-dasharray:
+        - 3
+        - 1
+        - 1
+        - 1
+      line-width: 1
+  - id: oc-boundary-land-level-1
+    type: line
+    source: oceanus
+    source-layer: oc-boundary
+    minzoom: 4
+    maxzoom: 8
+    filter:
+      - all
+      - - '=='
+        - - get
+          - admin_level
+        - 1
+      - - '=='
+        - - has
+          - jflag
+        - false
+    layout:
+      line-join: round
+    paint:
+      line-color: '#9e9cab'
+      line-dasharray:
+        - 3
+        - 1
+        - 1
+        - 1
+      line-width: 1
+  - id: oc-boundary-land-level-0
+    type: line
+    source: oceanus
+    source-layer: oc-boundary
+    filter:
+      - '=='
+      - - get
+        - admin_level
+      - 0
+    layout:
+      line-join: round
+    paint:
+      line-color: '#9e9cab'
+      line-width: 1
+      line-blur: 0.4
+  - id: oc-water-name-ocean
+    type: symbol
+    source: oceanus
+    source-layer: oc-water_name
+    filter:
+      - all
+      - - '=='
+        - - geometry-type
+        - Point
+      - - '=='
+        - - get
+          - class
+        - ocean
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: oc-water-name-other
+    type: symbol
+    source: oceanus
+    source-layer: oc-water
+    minzoom: 6
+    filter:
+      - all
+      - - '=='
+        - - geometry-type
+        - Polygon
+      - - has
+        - name
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size:
+        - interpolate
+        - - linear
+        - - zoom
+        - 0
+        - 10
+        - 6
+        - 14
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+      visibility: visible
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: nt-water-name-ocean
+    type: symbol
+    source: oceanus
+    source-layer: nt-water-name
+    minzoom: 8
+    filter:
+      - '=='
+      - - get
+        - class
+      - ocean
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: nt-water-name-river
+    type: symbol
+    source: oceanus
+    source-layer: nt-water-name
+    minzoom: 13
+    filter:
+      - '=='
+      - - get
+        - class
+      - river
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: oc-label-country
+    type: symbol
+    source: oceanus
+    source-layer: oc-label
+    maxzoom: 8
+    filter:
+      - '=='
+      - [get, class]
+      - country
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: oc-label-pref-ja
+    type: symbol
+    source: oceanus
+    source-layer: oc-label
+    minzoom: 5
+    maxzoom: 8
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - pref
+      - - has
+        - jflag
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: oc-label-pref
+    type: symbol
+    source: oceanus
+    source-layer: oc-label
+    minzoom: 5
+    filter:
+      - all
+      - ['==', [get, class], pref]
+      - ['==', [has, jflag], false]
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: oc-label-town-ja
+    type: symbol
+    source: oceanus
+    source-layer: oc-label
+    minzoom: 6
+    maxzoom: 8
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - town
+      - - has
+        - jflag
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image: circle-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: oc-label-town
+    type: symbol
+    source: oceanus
+    source-layer: oc-label
+    minzoom: 6
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - town
+      - - '=='
+        - - has
+          - jflag
+        - false
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image: circle-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: oc-airport
+    type: symbol
+    source: oceanus
+    source-layer: oc-airport
+    minzoom: 5
+    filter:
+      - all
+      - - '=='
+        - - get
+          - class
+        - airport
+      - - '=='
+        - - has
+          - jflag
+        - false
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image: airport-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: landuse-commercial
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - all
+      - $is_polygon
+      - - '=='
+        - class
+        - commercial
+    paint:
+      fill-color: hsla(0, 60%, 87%, 0.23)
+  - id: landuse-industrial
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - all
+      - $is_polygon
+      - - '=='
+        - class
+        - industrial
+    paint:
+      fill-color: hsla(49, 100%, 88%, 0.34)
+  - id: park
+    type: fill
+    source: geolonia
+    source-layer: park
+    filter: $is_polygon
+    layout:
+      visibility: visible
+    paint:
+      fill-color: rgba(102, 170, 68, 1)
+      fill-opacity:
+        stops:
+          - - 7
+            - 0
+          - - 9
+            - 0.2
+  - id: landuse-cemetery
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - '=='
+      - class
+      - cemetery
+    paint:
+      fill-color: '#e0e4dd'
+  - id: landuse-hospital
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - '=='
+      - class
+      - hospital
+    paint:
+      fill-color: '#fde'
+  - id: landuse-school
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - '=='
+      - class
+      - school
+    paint:
+      fill-color: '#f0e8f8'
+  - id: landuse-railway
+    type: fill
+    source: geolonia
+    source-layer: landuse
+    filter:
+      - '=='
+      - class
+      - railway
+    paint:
+      fill-color: hsla(30, 19%, 90%, 0.4)
+  - id: waterway_tunnel
+    type: line
+    source: geolonia
+    source-layer: waterway
+    minzoom: 14
+    filter:
+      - all
+      - [in, class, river, stream, canal]
+      - ['==', brunnel, tunnel]
+    layout:
+      line-cap: round
+    paint:
+      line-color: $water_color_0
+      line-width:
+        base: 1.3
+        stops:
+          - [13, 0.5]
+          - [20, 6]
+      line-dasharray:
+        - 2
+        - 4
+  - id: waterway-other
+    type: line
+    source: geolonia
+    source-layer: waterway
+    filter:
+      ['!in', class, canal, river, stream]
+    layout:
+      line-cap: round
+    paint:
+      line-color: $water_color_0
+      line-width:
+        base: 1.3
+        stops:
+          - [13, 0.5]
+          - [20, 2]
+  - id: waterway-stream-canal
+    type: line
+    source: geolonia
+    source-layer: waterway
+    filter:
+      - all
+      - [in, class, canal, stream]
+      - ['!=', brunnel, tunnel]
+    layout:
+      line-cap: round
+    paint:
+      line-color: $water_color_0
+      line-width:
+        base: 1.3
+        stops:
+          - - 13
+            - 0.5
+          - - 20
+            - 6
+  - id: waterway-river
+    type: line
+    source: geolonia
+    source-layer: waterway
+    filter:
+      - all
+      - - '=='
+        - class
+        - river
+      - - '!='
+        - brunnel
+        - tunnel
+    layout:
+      line-cap: round
+    paint:
+      line-color: $water_color_0
+      line-width:
+        base: 1.2
+        stops:
+          - - 10
+            - 0.8
+          - - 20
+            - 6
+  - id: waterway-name
+    type: symbol
+    source: geolonia
+    source-layer: waterway
+    minzoom: 13
+    filter:
+      - all
+      - $is_linestring
+      - - has
+        - name
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: line
+      text-letter-spacing: 0.2
+      symbol-spacing: 350
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: tunnel-railway
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - '=='
+        - class
+        - rail
+    paint:
+      line-color: '#A58043'
+      line-opacity: 0.4
+      line-width:
+        base: 1.4
+        stops:
+          - - 10
+            - 0.5
+          - - 18
+            - 2
+          - - 22
+            - 18
+      line-dasharray:
+        - 6
+        - 4
+  - id: tunnel-service-track-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - service
+        - track
+    layout:
+      line-join: round
+    paint:
+      line-color: '#cfcdca'
+      line-dasharray:
+        - 0.5
+        - 0.25
+      line-width:
+        base: 1.2
+        stops:
+          - - 15
+            - 1
+          - - 16
+            - 4
+          - - 20
+            - 11
+  - id: tunnel-minor-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - '=='
+        - class
+        - minor
+    layout:
+      line-join: round
+    paint:
+      line-color: '#cfcdca'
+      line-opacity:
+        stops:
+          - - 12
+            - 0
+          - - 12.5
+            - 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 12
+            - 0.5
+          - - 13
+            - 1
+          - - 14
+            - 4
+          - - 20
+            - 15
+  - id: tunnel-secondary-tertiary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - secondary
+        - tertiary
+    layout:
+      line-join: round
+    paint:
+      line-color: '#e9ac77'
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 8
+            - 1.5
+          - - 20
+            - 17
+  - id: tunnel-trunk-primary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - primary
+        - trunk
+    layout:
+      line-join: round
+    paint:
+      line-color: '#e9ac77'
+      line-width:
+        base: 1.2
+        stops:
+          - - 5
+            - 0.4
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 22
+  - id: tunnel-motorway-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - '=='
+        - class
+        - motorway
+    layout:
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: '#e9ac77'
+      line-dasharray:
+        - 0.5
+        - 0.25
+      line-width:
+        base: 1.2
+        stops:
+          - - 5
+            - 0.4
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 22
+  - id: tunnel-path
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '=='
+          - brunnel
+          - tunnel
+        - - '=='
+          - class
+          - path
+    paint:
+      line-color: '#cba'
+      line-dasharray:
+        - 1.5
+        - 0.75
+      line-width:
+        base: 1.2
+        stops:
+          - - 15
+            - 1.2
+          - - 20
+            - 4
+  - id: tunnel-service-track
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - service
+        - track
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fff'
+      line-width:
+        base: 1.2
+        stops:
+          - - 15.5
+            - 0
+          - - 16
+            - 2
+          - - 20
+            - 7.5
+  - id: tunnel-minor
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - '=='
+        - class
+        - minor_road
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fff'
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 13.5
+            - 0
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: tunnel-secondary-tertiary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - secondary
+        - tertiary
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fff4c6'
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 10
+  - id: tunnel-trunk-primary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - in
+        - class
+        - primary
+        - trunk
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fff4c6'
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: tunnel-motorway
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - tunnel
+      - - '=='
+        - class
+        - motorway
+    layout:
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: '#ffdaa6'
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: ferry
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - in
+        - class
+        - ferry
+    layout:
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(108, 159, 182, 1)
+      line-width: 1.1
+      line-dasharray:
+        - 2
+        - 2
+  - id: aeroway-taxiway-casing
+    type: line
+    source: geolonia
+    source-layer: aeroway
+    minzoom: 12
+    filter:
+      - all
+      - - in
+        - class
+        - taxiway
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(153, 153, 153, 1)
+      line-width:
+        base: 1.5
+        stops:
+          - - 11
+            - 2
+          - - 17
+            - 12
+      line-opacity: 1
+  - id: aeroway-runway-casing
+    type: line
+    source: geolonia
+    source-layer: aeroway
+    minzoom: 12
+    filter:
+      - all
+      - - in
+        - class
+        - runway
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(153, 153, 153, 1)
+      line-width:
+        base: 1.5
+        stops:
+          - - 11
+            - 5
+          - - 17
+            - 55
+      line-opacity: 1
+  - id: aeroway-area
+    type: fill
+    source: geolonia
+    source-layer: aeroway
+    minzoom: 4
+    filter:
+      - all
+      - $is_polygon
+      - - in
+        - class
+        - runway
+        - taxiway
+    layout:
+      visibility: visible
+    paint:
+      fill-opacity:
+        base: 1
+        stops:
+          - - 13
+            - 0
+          - - 14
+            - 1
+      fill-color: rgba(255, 255, 255, 1)
+  - id: aeroway-taxiway
+    type: line
+    source: geolonia
+    source-layer: aeroway
+    minzoom: 4
+    filter:
+      - all
+      - - in
+        - class
+        - taxiway
+      - $is_linestring
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.5
+        stops:
+          - - 11
+            - 1
+          - - 17
+            - 10
+      line-opacity:
+        base: 1
+        stops:
+          - - 11
+            - 0
+          - - 12
+            - 1
+  - id: aeroway-runway
+    type: line
+    source: geolonia
+    source-layer: aeroway
+    minzoom: 4
+    filter:
+      - all
+      - - in
+        - class
+        - runway
+      - $is_linestring
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.5
+        stops:
+          - - 11
+            - 4
+          - - 17
+            - 50
+      line-opacity:
+        base: 1
+        stops:
+          - - 11
+            - 0
+          - - 12
+            - 1
+  - id: highway-area
+    type: fill
+    source: geolonia
+    source-layer: transportation
+    filter: $is_polygon
+    layout:
+      visibility: visible
+    paint:
+      fill-color: hsla(0, 0%, 89%, 0.56)
+      fill-outline-color: '#cfcdca'
+      fill-opacity: 0.9
+      fill-antialias: false
+  - id: highway-motorway-link-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 12
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - '=='
+        - class
+        - motorway_link
+    layout:
+      line-cap: round
+      line-join: round
+    paint:
+      line-color: '#e9ac77'
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 12
+            - 1
+          - - 13
+            - 3
+          - - 14
+            - 4
+          - - 20
+            - 15
+  - id: highway-link-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - primary_link
+        - secondary_link
+        - tertiary_link
+        - trunk_link
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: '#e9ac77'
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 12
+            - 1
+          - - 13
+            - 3
+          - - 14
+            - 4
+          - - 20
+            - 15
+  - id: highway-minor-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '!='
+          - brunnel
+          - tunnel
+        - - in
+          - class
+          - minor
+          - service
+          - track
+    layout:
+      line-cap: round
+      line-join: round
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity:
+        stops:
+          - - 12
+            - 0
+          - - 12.5
+            - 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 12
+            - 0.5
+          - - 13
+            - 1
+          - - 14
+            - 4
+          - - 20
+            - 15
+  - id: highway-secondary-tertiary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - secondary
+        - tertiary
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 8
+            - 1.5
+          - - 20
+            - 17
+  - id: highway-primary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 5
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - primary
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity:
+        stops:
+          - - 7
+            - 0
+          - - 8
+            - 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 7
+            - 0
+          - - 8
+            - 0.6
+          - - 9
+            - 1.5
+          - - 20
+            - 22
+  - id: highway-trunk-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 5
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - trunk
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity:
+        stops:
+          - - 5
+            - 0
+          - - 6
+            - 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 5
+            - 0
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 22
+  - id: highway-motorway-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 4
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - '=='
+        - class
+        - motorway
+    layout:
+      line-cap: butt
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 4
+            - 0
+          - - 5
+            - 0.4
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 22
+      line-opacity:
+        stops:
+          - - 4
+            - 0
+          - - 5
+            - 1
+  - id: highway-path
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 16
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '!in'
+          - brunnel
+          - bridge
+          - tunnel
+        - - '=='
+          - class
+          - path
+    paint:
+      line-color: '#dddddd'
+      line-dasharray:
+        - 1.5
+        - 0.75
+      line-width:
+        base: 1.2
+        stops:
+          - - 15
+            - 1.2
+          - - 20
+            - 4
+  - id: highway-motorway-link
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 12
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - '=='
+        - class
+        - motorway_link
+    layout:
+      line-cap: round
+      line-join: round
+    paint:
+      line-color: '#fc8'
+      line-width:
+        base: 1.2
+        stops:
+          - - 12.5
+            - 0
+          - - 13
+            - 1.5
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: highway-link
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - primary_link
+        - secondary_link
+        - tertiary_link
+        - trunk_link
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: '#fea'
+      line-width:
+        base: 1.2
+        stops:
+          - - 12.5
+            - 0
+          - - 13
+            - 1.5
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: highway-minor
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '!='
+          - brunnel
+          - tunnel
+        - - in
+          - class
+          - minor
+          - service
+          - track
+    layout:
+      line-cap: round
+      line-join: round
+    paint:
+      line-color: '#fff'
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - - 13.5
+            - 0
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: highway-secondary-tertiary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '!in'
+        - brunnel
+        - bridge
+        - tunnel
+      - - in
+        - class
+        - secondary
+        - tertiary
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 8
+            - 0.5
+          - - 20
+            - 13
+  - id: highway-primary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '!in'
+          - brunnel
+          - bridge
+          - tunnel
+        - - in
+          - class
+          - primary
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 8.5
+            - 0
+          - - 9
+            - 0.5
+          - - 20
+            - 18
+  - id: highway-trunk
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - $is_linestring
+      - - all
+        - - '!in'
+          - brunnel
+          - bridge
+          - tunnel
+        - - in
+          - class
+          - trunk
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: highway-motorway
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 5
+    filter:
+      - all
+      - - '=='
+        - $type
+        - LineString
+      - - all
+        - - '!in'
+          - brunnel
+          - bridge
+          - tunnel
+        - - '=='
+          - class
+          - motorway
+    layout:
+      line-cap: round
+      line-join: round
+      visibility: visible
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: bridge-motorway-link-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - '=='
+        - class
+        - motorway_link
+    layout:
+      line-join: round
+    paint: $bridge_casing_paint
+  - id: bridge-link-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - ['==', brunnel, bridge]
+      - [in, class, primary_link, secondary_link, tertiary_link, trunk_link]
+    layout:
+      line-join: round
+    paint: $bridge_casing_paint
+  - id: bridge-secondary-tertiary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - ['==', brunnel, bridge]
+      - [in, class, secondary, tertiary]
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-opacity: 1
+      line-width:
+        base: 1.2
+        stops:
+          - [8, 1.5]
+          - [20, 28]
+  - id: bridge-trunk-primary-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - in
+        - class
+        - primary
+        - trunk
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 5
+            - 0.4
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 26
+  - id: bridge-motorway-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - '=='
+        - class
+        - motorway
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(222, 222, 222, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 5
+            - 0.4
+          - - 6
+            - 0.6
+          - - 7
+            - 1.5
+          - - 20
+            - 22
+  - id: bridge-path-casing
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - $type
+        - LineString
+      - - all
+        - - '=='
+          - brunnel
+          - bridge
+        - - '=='
+          - class
+          - path
+    paint:
+      line-color: '#f8f4f0'
+      line-width:
+        base: 1.2
+        stops:
+          - - 15
+            - 1.2
+          - - 20
+            - 18
+  - id: bridge-path
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - $type
+        - LineString
+      - - all
+        - - '=='
+          - brunnel
+          - bridge
+        - - '=='
+          - class
+          - path
+    paint:
+      line-color: '#cba'
+      line-width:
+        base: 1.2
+        stops:
+          - - 15
+            - 1.2
+          - - 20
+            - 4
+      line-dasharray:
+        - 1.5
+        - 0.75
+  - id: bridge-motorway-link
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - '=='
+        - class
+        - motorway_link
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fc8'
+      line-width:
+        base: 1.2
+        stops:
+          - - 12.5
+            - 0
+          - - 13
+            - 1.5
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: bridge-link
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - in
+        - class
+        - primary_link
+        - secondary_link
+        - tertiary_link
+        - trunk_link
+    layout:
+      line-join: round
+    paint:
+      line-color: '#fea'
+      line-width:
+        base: 1.2
+        stops:
+          - - 12.5
+            - 0
+          - - 13
+            - 1.5
+          - - 14
+            - 2.5
+          - - 20
+            - 11.5
+  - id: bridge-secondary-tertiary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - in
+        - class
+        - secondary
+        - tertiary
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 20
+  - id: bridge-trunk-primary
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - in
+        - class
+        - primary
+        - trunk
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: bridge-motorway
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - brunnel
+        - bridge
+      - - '=='
+        - class
+        - motorway
+    layout:
+      line-join: round
+    paint:
+      line-color: rgba(255, 255, 255, 1)
+      line-width:
+        base: 1.2
+        stops:
+          - - 6.5
+            - 0
+          - - 7
+            - 0.5
+          - - 20
+            - 18
+  - id: railway
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - class
+        - rail
+      - - '!in'
+        - brunnel
+        - tunnel
+    paint:
+      line-color: '#999999'
+      line-width:
+        stops:
+          - - 10
+            - 0.8
+          - - 18
+            - 4
+          - - 22
+            - 20
+  - id: railway-hatching
+    type: line
+    source: geolonia
+    source-layer: transportation
+    filter:
+      - all
+      - - '=='
+        - class
+        - rail
+      - - '!in'
+        - brunnel
+        - tunnel
+    paint:
+      line-color: '#ffffff'
+      line-dasharray:
+        - 6
+        - 4
+      line-width:
+        stops:
+          - - 10
+            - 0.5
+          - - 18
+            - 2
+          - - 22
+            - 18
+  - id: cablecar
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - '=='
+      - class
+      - cable_car
+    layout:
+      line-cap: round
+      visibility: visible
+    paint:
+      line-color: hsl(0, 0%, 70%)
+      line-width:
+        base: 1
+        stops:
+          - - 11
+            - 1
+          - - 19
+            - 2.5
+  - id: cablecar-dash
+    type: line
+    source: geolonia
+    source-layer: transportation
+    minzoom: 13
+    filter:
+      - '=='
+      - class
+      - cable_car
+    layout:
+      line-cap: round
+      visibility: visible
+    paint:
+      line-color: hsl(0, 0%, 70%)
+      line-width:
+        base: 1
+        stops:
+          - - 11
+            - 3
+          - - 19
+            - 5.5
+      line-dasharray:
+        - 2
+        - 3
+  - id: boundary-land-level-4
+    type: line
+    source: geolonia
+    source-layer: boundary
+    minzoom: 8
+    maxzoom: 14
+    filter:
+      - all
+      - - '=='
+        - admin_level
+        - 4
+    layout:
+      line-join: round
+    paint:
+      line-color: '#9e9cab'
+      line-dasharray:
+        - 3
+        - 1
+        - 1
+        - 1
+      line-width:
+        base: 1.4
+        stops:
+          - - 4
+            - 0.4
+          - - 5
+            - 1
+          - - 12
+            - 2
+  - id: water-name-lakeline
+    type: symbol
+    source: geolonia
+    source-layer: water_name
+    filter:
+      - all
+      - - '=='
+        - $type
+        - LineString
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: line
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: water-name-ocean
+    type: symbol
+    source: geolonia
+    source-layer: water_name
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - '=='
+        - class
+        - ocean
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: water-name-other
+    type: symbol
+    source: geolonia
+    source-layer: water_name
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - '!in'
+        - class
+        - ocean
+      - - '!='
+        - disputed
+        - japan_northern_territories
+      - - '!='
+        - subclass
+        - moat
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size:
+        stops:
+          - - 0
+            - 10
+          - - 6
+            - 14
+      text-field: $prefer_ja_text_field
+      text-max-width: 5
+      text-rotation-alignment: map
+      symbol-placement: point
+      symbol-spacing: 350
+      text-letter-spacing: 0.2
+      visibility: visible
+    paint:
+      text-color: $water_label_color
+      text-halo-width: 1.5
+      text-halo-color: $water_label_halo_color
+  - id: building
+    type: fill
+    source: geolonia
+    source-layer: building
+    minzoom: 15
+    paint:
+      fill-opacity: 0.6
+      fill-color: rgba(225, 225, 225, 1)
+      fill-outline-color: '#ffffff'
+      fill-antialias: true
+  - id: building-3d
+    type: fill-extrusion
+    source: geolonia
+    source-layer: building
+    minzoom: 15
+    layout:
+      visibility: none
+    paint:
+      fill-extrusion-color: '#dedede'
+      fill-extrusion-height:
+        - get
+        - render_height
+      fill-extrusion-base:
+        - get
+        - render_min_height
+      fill-extrusion-opacity: 0.4
+  - id: poi-r25
+    type: symbol
+    source: geolonia
+    source-layer: poi
+    minzoom: 16
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - '>='
+        - rank
+        - 25
+      - - has
+        - name
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image:
+        - coalesce
+        - - image
+          - - concat
+            - - get
+              - class
+            - '-11'
+        - - image
+          - circle-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: poi-r10-r24
+    type: symbol
+    source: geolonia
+    source-layer: poi
+    minzoom: 13
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - <
+        - rank
+        - 25
+      - - has
+        - name
+      - - '!='
+        - disputed
+        - japan_northern_territories
+      - - '>='
+        - rank
+        - 10
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image:
+        - coalesce
+        - - image
+          - - concat
+            - - get
+              - class
+            - '-11'
+        - - image
+          - circle-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+      visibility: visible
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: poi-r0-r9
+    type: symbol
+    source: geolonia
+    source-layer: poi
+    minzoom: 13
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - <
+        - rank
+        - 9
+      - - has
+        - name
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image:
+        - coalesce
+        - - image
+          - - concat
+            - - get
+              - class
+            - '-11'
+        - - image
+          - circle-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+      visibility: visible
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: poi-railway
+    type: symbol
+    source: geolonia
+    source-layer: poi
+    minzoom: 13
+    filter:
+      - all
+      - - '=='
+        - $type
+        - Point
+      - - has
+        - name
+      - - '=='
+        - class
+        - railway
+      - - '=='
+        - subclass
+        - station
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image: '{class}-11'
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+      icon-optional: false
+      icon-ignore-placement: false
+      icon-allow-overlap: false
+      text-ignore-placement: false
+      text-allow-overlap: false
+      text-optional: true
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: road_oneway
+    type: symbol
+    source: geolonia
+    source-layer: transportation
+    minzoom: 15
+    filter:
+      - all
+      - - '=='
+        - oneway
+        - 1
+      - - in
+        - class
+        - motorway
+        - trunk
+        - primary
+        - secondary
+        - tertiary
+        - minor
+        - service
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      symbol-placement: line
+      icon-image: oneway
+      symbol-spacing: 75
+      icon-padding: 2
+      icon-rotation-alignment: map
+      icon-rotate: 90
+      icon-size:
+        stops:
+          - - 15
+            - 0.5
+          - - 19
+            - 1
+    paint:
+      icon-opacity: 0.5
+  - id: road_oneway_opposite
+    type: symbol
+    source: geolonia
+    source-layer: transportation
+    minzoom: 15
+    filter:
+      - all
+      - - '=='
+        - oneway
+        - -1
+      - - in
+        - class
+        - motorway
+        - trunk
+        - primary
+        - secondary
+        - tertiary
+        - minor
+        - service
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      symbol-placement: line
+      icon-image: oneway
+      symbol-spacing: 75
+      icon-padding: 2
+      icon-rotation-alignment: map
+      icon-rotate: -90
+      icon-size:
+        stops:
+          - - 15
+            - 0.5
+          - - 19
+            - 1
+    paint:
+      icon-opacity: 0.5
+  - id: road_shield
+    type: symbol
+    source: geolonia
+    source-layer: transportation_name
+    metadata: {}
+    minzoom: 7
+    filter:
+      - all
+      - - <=
+        - ref_length
+        - 6
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      icon-image: default_{ref_length}
+      icon-rotation-alignment: viewport
+      symbol-placement:
+        base: 1
+        stops:
+          - - 10
+            - point
+          - - 11
+            - line
+      symbol-spacing: 500
+      text-field: '{ref}'
+      text-font:
+        - Noto Sans Regular
+      text-offset:
+        - 0
+        - 0
+      text-rotation-alignment: viewport
+      text-size: $text_size_small
+      icon-size: 1
+  - id: airport-label-major
+    type: symbol
+    source: geolonia
+    source-layer: aerodrome_label
+    minzoom: 10
+    filter:
+      - all
+      - - has
+        - iata
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-padding: 2
+      text-font:
+        - Noto Sans Regular
+      text-anchor: top
+      icon-image: airport-11
+      text-field: $prefer_ja_text_field
+      text-offset:
+        - 0
+        - 0.6
+      text-size: $text_size_middle
+      text-max-width: 9
+      icon-size: 1
+      text-optional: true
+      visibility: visible
+    paint:
+      text-halo-blur: 0.5
+      text-color: '#666'
+      text-halo-width: 1
+      text-halo-color: '#ffffff'
+  - id: nt-label-small
+    type: symbol
+    source: oceanus
+    source-layer: nt-label
+    minzoom: 8
+    filter:
+      - in
+      - subclass
+      - '19'
+      - '20'
+      - '21'
+      - '22'
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size:
+        base: 1.2
+        stops:
+          - - 10
+            - 12
+          - - 15
+            - 22
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: nt-label-large
+    type: symbol
+    source: oceanus
+    source-layer: nt-label
+    minzoom: 13
+    filter:
+      [in, subclass, '1', '2', '5', '6', '7', '8', '10', '11', '15', '16', '17']
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size:
+        base: 1.2
+        stops:
+          - - 10
+            - 12
+          - - 15
+            - 22
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: place-village
+    type: symbol
+    source: geolonia
+    source-layer: place
+    filter:
+      - all
+      - - '=='
+        - class
+        - village
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size:
+        base: 1.2
+        stops:
+          - [10, 12]
+          - [15, 22]
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: place-town
+    type: symbol
+    source: geolonia
+    source-layer: place
+    filter:
+      - all
+      - - '=='
+        - class
+        - town
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: place-island-name
+    type: symbol
+    source: geolonia
+    source-layer: place
+    filter:
+      - all
+      - ['==', [get, class], island]
+      - ['!=', [get, disputed], japan_northern_territories]
+      - - any
+        - ['!=', [get, subclass], islet]
+        - ['>=', [zoom], 16]
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: 11
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: place-city
+    type: symbol
+    source: geolonia
+    source-layer: place
+    minzoom: 8
+    filter:
+      - all
+      - - '!='
+        - capital
+        - 2
+      - - '=='
+        - class
+        - city
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      visibility: visible
+    paint:
+      text-color: $land_label_color
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color
+  - id: place-city-capital
+    type: symbol
+    source: geolonia
+    source-layer: place
+    filter:
+      - all
+      - - '=='
+        - capital
+        - 2
+      - - '=='
+        - class
+        - city
+      - - '!='
+        - disputed
+        - japan_northern_territories
+    layout:
+      text-font:
+        - Noto Sans Regular
+      text-size: $text_size_large
+      text-field: $prefer_ja_text_field
+      text-max-width: 8
+      icon-image: star-11
+      text-offset:
+        - 0.4
+        - 0
+      icon-size: 0.8
+      text-anchor: left
+      visibility: visible
+    paint:
+      text-color: '#333'
+      text-halo-width: 1.2
+      text-halo-color: $land_label_halo_color

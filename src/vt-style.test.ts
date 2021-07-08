@@ -29,5 +29,22 @@ test('should work with cusutom walker function', () => {
   const vtStyleCore = new VTStyleCore(yaml, walker)
   const object = vtStyleCore.transpile()
   expect(object).toEqual({ foo: 2, bar: 3, baz: 4 })
+})
 
+test('should work with variable by default', () => {
+  const yaml = [
+    '$color: red',
+    'foo: $color',
+  ].join('\n')
+  const walker: VTStyle.Walker = (_key, value) => {
+    if (typeof value === 'number') {
+      return value + 1
+    } else {
+      return value
+    }
+  }
+
+  const vtStyleCore = new VTStyleCore(yaml)
+  const object = vtStyleCore.transpile()
+  expect(object).toEqual({ foo: "red" })
 })

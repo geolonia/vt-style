@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		html, body, #container, #editor, #map {
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+		}
+		#yaml-input {
+			resize: none;
+			outline: none;
+			padding: .2em;
+		}
+		.split {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.gutter {
+			background-color: #eee;
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+
+
+		.gutter.gutter-horizontal {
+			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+			cursor: col-resize;
+		}
+	</style>
+</head>
+	<div id="container" class="split">
+		<div id="yaml-pane">
+			<div id="editor"></div>
+		</div>
+		<div id="map-pane">
+			<div id="map" data-hash="on" data-style="geolonia/basic"></div>
+		</div>
+	</div>
+<body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.2/split.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/mode-yaml.js" integrity="sha256-95xNUgbfIXvRXJezV53+JM5HPO6PnJ+wZ7/GwdesKAE=" crossorigin="anonymous"></script>
+	<script src="./vt-style.min.js"></script>
+	<script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
+	<script>
+		window.Split(['#yaml-pane', '#map-pane'], {
+			direction: 'horizontal',
+			onDragEnd: () => {
+				map.resize()
+				editor.resize()
+			}
+		})
+
+		const editor = window.ace.edit("editor")
+    editor.setOptions({ fontSize: '12pt' })
+		editor.getSession().setMode("ace/mode/yaml");
+
+		const map = new window.geolonia.Map('#map')
+    const fetchYaml = () => fetch("./style.yml").then(res => res.text())
+    const mapLoad = () => new Promise((resolve) => map.on('load', () => resolve(map)))
+
+    const main = async () => {
+      const [map, yaml] = await Promise.all([mapLoad(), fetchYaml()])
+      editor.setValue(yaml, -1)
+      editor.session.on('change', (delta) => {
+        const yaml = editor.getValue()
+        const vtStyleCore = new VTStyleCore(yaml)
+        try {
+          vtStyleCore.transpile()
+          const style = vtStyleCore.toText()
+          map.setStyle(JSON.parse(style))
+        } catch (error) {
+          console.error(error)
+        }
+      });
+    }
+    main()
+	</script>
+</body>
+</html>

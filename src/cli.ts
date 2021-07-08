@@ -7,7 +7,6 @@ import fs from 'fs/promises'
 import chokidar from "chokidar";
 import chalk from 'chalk'
 import { VTStyleCore } from './vt-style'
-import { variableWalker } from './walkers/variable'
 import { notice, warn, error } from './message'
 
 const cli = meow(`
@@ -45,10 +44,9 @@ const consoleVar = {
   input: chalk.green(inputYamlFilePath),
   output: chalk.green(outputJsonFilePath),
 }
-const defaultWalkers = [variableWalker]
 
 const convert = async (input: string, output: string) => {
-  const vtStyle = new VTStyleCore(await fs.readFile(input, 'utf-8'), defaultWalkers)
+  const vtStyle = new VTStyleCore(await fs.readFile(input, 'utf-8'))
   vtStyle.transpile()
   const json = vtStyle.toText()
   if (json !== null) {
