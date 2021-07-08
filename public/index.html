@@ -71,10 +71,10 @@
       editor.setValue(yaml, -1)
       editor.session.on('change', (delta) => {
         const yaml = editor.getValue()
-        const vtStyleCore = new VTStyleCore(yaml)
+        const transpiler = new Transpiler(yaml)
         try {
-          vtStyleCore.transpile()
-          const style = vtStyleCore.toText()
+          transpiler.transpile()
+          const style = transpiler.toText()
           map.setStyle(JSON.parse(style))
         } catch (error) {
           console.error(error)

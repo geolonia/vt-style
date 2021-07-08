@@ -1,4 +1,6 @@
-# [WIP] `vt-style`
+# `vt-style`
+
+VTStyle is a YAML to JSON conversion tool with a special focus on maobox style."
 
 ## Usage
 

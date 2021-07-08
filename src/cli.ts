@@ -6,7 +6,7 @@ import process from 'process'
 import fs from 'fs/promises'
 import chokidar from "chokidar";
 import chalk from 'chalk'
-import { VTStyleCore } from './vt-style'
+import { Transpiler } from './vt-style'
 import { notice, warn, error } from './message'
 
 const cli = meow(`
@@ -46,9 +46,9 @@ const consoleVar = {
 }
 
 const convert = async (input: string, output: string) => {
-  const vtStyle = new VTStyleCore(await fs.readFile(input, 'utf-8'))
-  vtStyle.transpile()
-  const json = vtStyle.toText()
+  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'))
+  transpiler.transpile()
+  const json = transpiler.toText()
   if (json !== null) {
     return fs.writeFile(output, json)
   } else {

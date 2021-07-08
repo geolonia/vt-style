@@ -1,8 +1,8 @@
-import { VTStyle } from '..'
+import { VT } from '..'
 
-const variables: { [key: string]: VTStyle.Value } = {}
+const variables: { [key: string]: VT.Value } = {}
 
-export const variableWalker: VTStyle.Walker = (key, value, parent) => {
+export const variableFilter: VT.Filter = (key, value, parent) => {
   if (typeof key === 'string' && !Array.isArray(parent) && key.startsWith('$')) {
     variables[key] = value
     return

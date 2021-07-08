@@ -1,8 +1,8 @@
 import jsYaml from "js-yaml";
-import { VTStyle } from '.'
-import { variableWalker } from "./walkers/variable";
+import { VT } from '.'
+import { variableFilter } from "./filters/variable";
 
-const isVTStyleValue = (object: any): object is VTStyle.Value => {
+const isVTStyleValue = (object: any): object is VT.Value => {
   return Array.isArray(object) ||
     typeof object === 'object' ||
     typeof object === 'string' ||
@@ -14,11 +14,11 @@ const isVTStyleValue = (object: any): object is VTStyle.Value => {
 /**
  * Plugable YAML -> JSON Transpiler
  */
-export class VTStyleCore {
+export class Transpiler {
   private yaml: string
-  private walks: VTStyle.Walker[]
+  private walks: VT.Filter[]
   private json: string = ""
-  private object: VTStyle.Value = null
+  private object: VT.Value = null
 
   static json2yaml = (json: string) => {
     return jsYaml.dump(jsYaml.load(json, { schema: jsYaml.JSON_SCHEMA }))
@@ -29,7 +29,7 @@ export class VTStyleCore {
    * @param {string} yaml YAML format data
    * @param {function} walk
    */
-  constructor(yaml: string, walks: VTStyle.Walker | VTStyle.Walker[] = variableWalker) {
+  constructor(yaml: string, walks: VT.Filter | VT.Filter[] = variableFilter) {
     this.yaml = yaml;
     if (Array.isArray(walks)) {
       this.walks = walks
@@ -89,4 +89,4 @@ export class VTStyleCore {
 }
 
 // @ts-ignore
-global.window && (global.window.VTStyleCore = VTStyleCore)
+global.window && (global.window.Transpiler = Transpiler)
