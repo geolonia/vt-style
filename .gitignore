@@ -75,4 +75,7 @@ typings/
 # Serverless directories
 .serverless
 
+# Use yarn
+package-lock.json
+
 dist
