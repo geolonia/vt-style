@@ -43,6 +43,7 @@ export class Transpiler {
   constructor(yaml: string, options: Partial<VT.Options> = {}) {
     this.yaml = yaml;
     this.options = { ...Transpiler.defaultOptions, ...options }
+    this.transpile()
   }
 
   /**
@@ -114,7 +115,7 @@ export class Transpiler {
   /**
    * run transpile
    */
-  transpile() {
+  private transpile() {
     this.parse()
     this.traverse()
     this.generate()
@@ -122,7 +123,7 @@ export class Transpiler {
   }
 }
 
-if(global.window) {
+if (global.window) {
   // @ts-ignore
   const VT = { ...global.window.VT, Transpiler }
   // @ts-ignore

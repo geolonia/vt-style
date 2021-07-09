@@ -48,10 +48,9 @@ const consoleVar = {
  * run transpiler
  */
 const convert = async (input: string, output: string, options: Partial<VT.Options>) => {
-  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), options)
-  const json = transpiler.transpile().toText()
-  if (json !== null) {
-    return fs.writeFile(output, json)
+  const styleText = new Transpiler(await fs.readFile(input, 'utf-8'), options).toText()
+  if (styleText !== null) {
+    return fs.writeFile(output, styleText)
   } else {
     throw new Error('Invalid export')
   }

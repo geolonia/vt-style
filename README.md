@@ -10,6 +10,8 @@ http://geolonia.github.io/vt-style/
 
 ## Usage
 
+### CLI
+
 ```shell
 $ vt-style -h
 
@@ -24,6 +26,15 @@ Options
   --help, -h    Show the help.
   --watch, -w   Turn on watch mode. vt-style will continue to watch for changes in input source.
   --minify, -m  Turn on minify flag. vt-style will minify the output JSON.
+```
+
+### Node.js
+
+```typescript
+import { Transpiler } from "vt-style";
+const yaml = ["---", "hello: 123", 'world: "abc"', ""].join("\n");
+const transpiler = new Transpiler(yaml);
+const style = transpiler.toJSON();
 ```
 
 ## Development

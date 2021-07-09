@@ -30,11 +30,6 @@ window.ace.config.loadModule("ace/ext/searchbox", (m) => {
 yamlEditor.searchBox.hide();
 jsonEditor.searchBox.hide();
 
-const map = new window.geolonia.Map("#map");
-const fetchYaml = () => fetch("./style.yml").then((res) => res.text());
-const loadMap = () =>
-  new Promise((resolve) => map.on("load", () => resolve(map)));
-
 class StatusControl {
   onAdd(map) {
     this.map = map;
@@ -52,34 +47,93 @@ class StatusControl {
   }
 }
 
+/**
+ * normalize style ref
+ * - basic, geolonia/basic, geolonia/basic/master -> geolonia/basic/master
+ * - fallback master -> main if not exists
+ * @returns string
+ */
+const fetchYaml = async () => {
+  const styleUrlFormat = "https://raw.githubusercontent.com/%s/style.json";
+
+  let styleUrl;
+
+  const styleIdentifier = new URLSearchParams(location.search).get("style");
+  if (!styleIdentifier) {
+    const yaml = await fetch("./style.yml").then((res) => res.text());
+    const json = new window.VT.Transpiler(yaml).toText();
+    return { yaml, json };
+  } else if (styleIdentifier) {
+    if (styleIdentifier.match(/^https:\/\//)) {
+      styleUrl = styleIdentifier;
+    } else {
+      const stylePath = styleIdentifier
+        .split(/\//)
+        .filter((section) => !!section);
+      if (stylePath.length === 1) {
+        stylePath.unshift("geolonia");
+        stylePath.push("master");
+      } else if (stylePath.length === 2) {
+        stylePath.push("master");
+      }
+      styleUrl = styleUrlFormat.replace("%s", stylePath.join("/"));
+    }
+  }
+
+  if (styleUrl.includes("/master/style.json")) {
+    const response = await fetch(styleUrl, { method: "HEAD" });
+    if (response.status > 399) {
+      const fallbackedStyle = styleUrl.replace(
+        "/master/style.json",
+        "/main/style.json"
+      );
+      console.log(
+        `[geolonia/preview] style ${styleUrl} is not found. Trying ${fallbackedStyle}..`
+      );
+      styleUrl = fallbackedStyle;
+    }
+  }
+  const json = await fetch(styleUrl).then((res) => res.text());
+  const yaml = window.VT.Transpiler._json2yaml(json);
+  return { yaml, json };
+};
+
 const main = async () => {
   const statusControl = new StatusControl();
 
-  const [map, yaml] = await Promise.all([loadMap(), fetchYaml()]);
+  const { yaml, json } = await fetchYaml();
+  console.log({ json });
+  const map = new window.geolonia.Map({
+    container: "#map",
+    style: JSON.parse(json),
+  });
+
+  map.on("load", () => {
+    map.addControl(statusControl, "bottom-left");
+    statusControl.update("style");
+
+    yamlEditor.session.on("change", () => {
+      const yaml = yamlEditor.getValue();
+      const transpiler = new window.VT.Transpiler(yaml);
+      try {
+        const style = transpiler.toJSON();
+        map.setStyle(style);
+        jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
+        statusControl.update("style");
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    map.on("click", (e) => {
+      const features = map.queryRenderedFeatures(e.point);
+      jsonEditor.setValue(JSON.stringify(features, null, 2), -1);
+      statusControl.update(`features(${features.length})`);
+    });
+  });
 
   // set initial values
   yamlEditor.setValue(yaml, -1);
-  jsonEditor.setValue(JSON.stringify(map.getStyle(), null, 2), -1);
-  map.addControl(statusControl, "bottom-left");
-  statusControl.update("style");
-
-  yamlEditor.session.on("change", (delta) => {
-    const yaml = yamlEditor.getValue();
-    const transpiler = new window.VT.Transpiler(yaml);
-    try {
-      const style = transpiler.transpile().toJSON();
-      map.setStyle(style);
-      jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
-      statusControl.update("style");
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
-  map.on("click", (e) => {
-    const features = map.queryRenderedFeatures(e.point);
-    jsonEditor.setValue(JSON.stringify(features, null, 2), -1);
-    statusControl.update(`features(${features.length})`);
-  });
+  jsonEditor.setValue(json, -1);
 };
 main();

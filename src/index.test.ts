@@ -6,8 +6,7 @@ test('should convert yaml to json', () => {
     'bye: *text',
   ].join('\n')
 
-  const transpiler = new Transpiler(yaml)
-  const style = transpiler.transpile().toJSON()
+  const style = new Transpiler(yaml).toJSON()
   expect(style).toEqual({ hello: "world", bye: "world" })
 })
 
@@ -25,8 +24,7 @@ test('should work with a cusutom filter function', () => {
     }
   }
 
-  const transpiler = new Transpiler(yaml, { filters: [incrementFilter] })
-  const style = transpiler.transpile().toJSON()
+  const style = new Transpiler(yaml, { filters: [incrementFilter] }).toJSON()
   expect(style).toEqual({ foo: 2, bar: 3, baz: 4 })
 })
 
@@ -51,8 +49,7 @@ test('should work with multiple cusutom filter functions', () => {
     }
   }
 
-  const transpiler = new Transpiler(yaml, { filters: [incrementFilter, squareFIlter] })
-  const style = transpiler.transpile().toJSON()
+  const style = new Transpiler(yaml, { filters: [incrementFilter, squareFIlter] }).toJSON()
   expect(style).toEqual({ foo: 4, bar: 9, baz: 16 })
 })
 
@@ -62,7 +59,6 @@ test('should work with variable filter by default', () => {
     'foo: $color',
   ].join('\n')
 
-  const transpiler = new Transpiler(yaml)
-  const style = transpiler.transpile().toJSON()
+  const style = new Transpiler(yaml).toJSON()
   expect(style).toEqual({ foo: "red" })
 })
