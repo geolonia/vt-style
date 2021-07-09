@@ -1,5 +1,7 @@
 # ================== variables ==================
 
+# Keys starting with $ are variable declarations. You can reuse strings and objects.
+
 ## colors
 
 $background_color: rgba(254, 254, 254, 1)

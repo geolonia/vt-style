@@ -25,7 +25,7 @@ test('should work with a cusutom filter function', () => {
     }
   }
 
-  const transpiler = new Transpiler(yaml, incrementFilter)
+  const transpiler = new Transpiler(yaml, { filters: [incrementFilter] })
   const style = transpiler.transpile().toJSON()
   expect(style).toEqual({ foo: 2, bar: 3, baz: 4 })
 })
@@ -51,7 +51,7 @@ test('should work with multiple cusutom filter functions', () => {
     }
   }
 
-  const transpiler = new Transpiler(yaml, [incrementFilter, squareFIlter])
+  const transpiler = new Transpiler(yaml, { filters: [incrementFilter, squareFIlter] })
   const style = transpiler.transpile().toJSON()
   expect(style).toEqual({ foo: 4, bar: 9, baz: 16 })
 })

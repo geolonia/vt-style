@@ -16,7 +16,6 @@ const isVTStyleValue = (object: any): object is VT.Value => {
 export class Transpiler {
   private yaml: string
   private options: VT.Options
-  private filters: VT.Filter[]
   private json: string = ""
   private object: VT.Value = null
 
@@ -24,19 +23,19 @@ export class Transpiler {
     return jsYaml.dump(jsYaml.load(json, { schema: jsYaml.JSON_SCHEMA }))
   }
 
+  static defaultOptions: VT.Options = {
+    minify: false,
+    filters: [variableFilter]
+  }
+
   /**
    *
    * @param {string} yaml YAML format data
    * @param {function} walk
    */
-  constructor(yaml: string, filters: VT.Filter | VT.Filter[] = variableFilter, options: VT.Options = { minify: false }) {
+  constructor(yaml: string, options: Partial<VT.Options> = {}) {
     this.yaml = yaml;
-    this.options = options
-    if (Array.isArray(filters)) {
-      this.filters = filters
-    } else {
-      this.filters = [filters];
-    }
+    this.options = { ...Transpiler.defaultOptions, ...options }
   }
 
   /**
@@ -61,7 +60,7 @@ export class Transpiler {
   private traverse(parent = this.object) {
     if (typeof parent === 'object' && parent !== null) {
       for (const key in parent) {
-        const nextValue = this.filters.reduce(
+        const nextValue = this.options.filters.reduce(
           // @ts-ignore
           (prev, filter) => filter(key, prev, parent),
           // @ts-ignore

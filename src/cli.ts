@@ -45,8 +45,8 @@ const consoleVar = {
   output: chalk.green(outputJsonFilePath),
 }
 
-const convert = async (input: string, output: string, options: VT.Options) => {
-  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), undefined, options)
+const convert = async (input: string, output: string, options: Partial<VT.Options>) => {
+  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), options)
   const json = transpiler.transpile().toText()
   if (json !== null) {
     return fs.writeFile(output, json)
@@ -57,7 +57,7 @@ const convert = async (input: string, output: string, options: VT.Options) => {
 
 const main = async () => {
 
-  const options: VT.Options = {
+  const options = {
     minify: cli.flags.minify,
   }
 

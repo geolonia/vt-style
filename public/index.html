@@ -59,6 +59,7 @@
 		})
 
 		const editor = window.ace.edit("editor")
+    editor.setValue('# loading..', -1)
     editor.setOptions({ fontSize: '12pt' })
 		editor.getSession().setMode("ace/mode/yaml");
 
