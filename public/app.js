@@ -12,7 +12,8 @@ window.ace.config.loadModule("ace/ext/searchbox", (m) => {
 });
 yamlEditor.searchBox.hide();
 jsonEditor.searchBox.hide();
-
+yamlEditor.getSession().setUseWrapMode(true);
+jsonEditor.getSession().setUseWrapMode(true);
 class StatusControl {
   onAdd(map) {
     this.map = map;
@@ -140,11 +141,15 @@ const main = async () => {
     container: "#map",
     style: JSON.parse(json),
   });
+
+  yamlEditor.resize();
   jsonEditor.resize();
 
   map.on("load", () => {
     map.addControl(statusControl, "bottom-right");
     map.addControl(forkMeControl, "top-left");
+    jsonEditor.unsetStyle("feature-mode");
+    jsonEditor.setStyle("style-mode");
     statusControl.update("style");
 
     yamlEditor.session.on("change", () => {
@@ -155,6 +160,8 @@ const main = async () => {
         map.setStyle(style);
         jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
         statusControl.update("style");
+        jsonEditor.unsetStyle("feature-mode");
+        jsonEditor.setStyle("style-mode");
       } catch (error) {
         console.error(error);
       }
@@ -164,6 +171,8 @@ const main = async () => {
       const features = map.queryRenderedFeatures(e.point);
       jsonEditor.setValue(JSON.stringify(features, null, 2), -1);
       statusControl.update(`features(${features.length})`);
+      jsonEditor.unsetStyle("style-mode");
+      jsonEditor.setStyle("feature-mode");
     });
   });
 

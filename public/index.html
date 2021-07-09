@@ -17,6 +17,12 @@
 			padding: 0;
 			margin: 0;
 		}
+    #json-editor.style-mode {
+      background-color: rgba(200, 200, 255, 0.2);
+    }
+    #json-editor.feature-mode {
+      background-color: rgba(255, 0, 0, 0.05);
+    }
 		.split-h {
 			display: flex;
 			flex-direction: row;
@@ -55,7 +61,7 @@
           ></div>
       </div>
       <div id="right-bottom-pane">
-        <div id="json-editor"></div>
+        <div id="json-editor" class="style-mode"></div>
       </div>
     </div>
   </div>

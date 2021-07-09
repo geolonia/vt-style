@@ -1,9 +1,16 @@
-# ================== variables ==================
+# ================== VT Style Live DEMO ==================
+#
+# This is a VT Style(https://github.com/geolonia/vt-style) playground.
+# The YAML text written in this pane will be converted and reflected in the map on the right.
+# The lower right pane shows the converted style.json.
+# The pane is also used to dump the geographic features.
+# Clicking on a feature on the map will display the result as a JSON dump.
 
-# Keys starting with $ are variable declarations. You can reuse strings and objects.
+# ====== variables ======
+#
+# Keys starting with `$` are variable declarations. You can reuse literals and objects.
 
-## colors
-
+# colors
 $background_color: rgba(254, 254, 254, 1)
 $water_color_0: rgba(152, 209, 252, 1)
 $water_color_200: rgba(2, 183, 237, 1)
@@ -27,14 +34,12 @@ $water_label_halo_color: rgba(255, 255, 255, 0.7)
 $land_label_color: rgba(102, 102, 102, 1)
 $land_label_halo_color: rgba(255,255,255,0.8)
 
-## filter
-
+# filter
 $is_ocean: ['==', [get, class], ocean]
 $is_polygon: ['==', $type, Polygon]
 $is_linestring: ['==', $type, LineString]
 
-## paint
-
+# paint
 $bridge_casing_paint:
   line-color: '#e9ac77'
   line-opacity: 1
@@ -55,8 +60,7 @@ $river_line_width:
 - 20
 - 6
 
-## layout
-
+# layout
 $prefer_ja_text_field:
 - string
 - [get, name:ja]
@@ -66,7 +70,13 @@ $text_size_large: 14
 $text_size_middle: 12
 $text_size_small: 10
 
-# ================== style ==================
+# ====== style ======
+#
+# The body of the style.json is defined as follows.
+# For more information about Mapbox gl js, please refer to the specification.
+#
+# https://docs.mapbox.com/mapbox-gl-js/style-spec/.
+#
 
 version: 8
 name: Geolonia Basic
