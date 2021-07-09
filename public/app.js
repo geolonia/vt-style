@@ -1,20 +1,3 @@
-window.Split(["#left-pane", "#right-pane"], {
-  direction: "horizontal",
-  onDragEnd: () => {
-    map.resize();
-    yamlEditor.resize();
-    jsonEditor.resize();
-  },
-});
-
-window.Split(["#right-top-pane", "#right-bottom-pane"], {
-  direction: "vertical",
-  onDragEnd: () => {
-    map.resize();
-    jsonEditor.resize();
-  },
-});
-
 const yamlEditor = window.ace.edit("yaml-editor");
 const jsonEditor = window.ace.edit("json-editor");
 yamlEditor.setValue("# loading..", -1);
@@ -129,6 +112,23 @@ const fetchYaml = async () => {
 };
 
 const main = async () => {
+  window.Split(["#left-pane", "#right-pane"], {
+    direction: "horizontal",
+    onDragEnd: () => {
+      map.resize();
+      yamlEditor.resize();
+      jsonEditor.resize();
+    },
+  });
+
+  window.Split(["#right-top-pane", "#right-bottom-pane"], {
+    direction: "vertical",
+    onDragEnd: () => {
+      map.resize();
+      jsonEditor.resize();
+    },
+  });
+
   const statusControl = new StatusControl();
   const forkMeControl = new ForkMeControl({
     url: "https://github.com/geolonia/vt-style",
@@ -140,6 +140,7 @@ const main = async () => {
     container: "#map",
     style: JSON.parse(json),
   });
+  jsonEditor.resize();
 
   map.on("load", () => {
     map.addControl(statusControl, "bottom-right");
