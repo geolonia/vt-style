@@ -154,8 +154,8 @@ const main = async () => {
 
     yamlEditor.session.on("change", () => {
       const yaml = yamlEditor.getValue();
-      const transpiler = new window.VT.Transpiler(yaml);
       try {
+        const transpiler = new window.VT.Transpiler(yaml);
         const style = transpiler.toJSON();
         map.setStyle(style);
         jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
