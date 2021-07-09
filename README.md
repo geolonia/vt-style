@@ -1,4 +1,6 @@
-# VT Style
+# [WIP] VT Style
+
+** This project is currntly experimental. Please use `@geolonia/vt-style` package instead of `vt-style`. **
 
 [![build](https://github.com/geolonia/vt-style/actions/workflows/build.yml/badge.svg)](https://github.com/geolonia/vt-style/actions/workflows/build.yml)
 
