@@ -40,9 +40,9 @@ const style = transpiler.toJSON();
 ## Development
 
 ```shell
-$ npm test           # run tests
-$ npm run start:docs # start live demo
-$ npm run build      # build lib and website
+$ npm test       # run tests
+$ npm start      # start live DEMO
+$ npm run build  # build lib and website
 ```
 
 ### Run with maputnik

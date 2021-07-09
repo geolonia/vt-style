@@ -47,6 +47,36 @@ class StatusControl {
   }
 }
 
+class ForkMeControl {
+  constructor(options) {
+    this.url = options.url;
+  }
+
+  onAdd() {
+    this.container = document.createElement("div");
+    this.container.className = "mapboxgl-ctrl";
+
+    const img =
+      "https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png";
+    const style = "position: absolute; top: -159px; left: -10px; border: 0;";
+
+    this.container.innerHTML = `<a><img style="${style}" src="${img}" alt="Fork me on GitHub"></a>`;
+    this.container.querySelector("a").href = this.url;
+
+    document.querySelector(".mapboxgl-ctrl-top-left").style.top = "149px";
+
+    return this.container;
+  }
+
+  onRemove() {
+    this.container.parentNode.removeChild(this.container);
+  }
+
+  getDefaultPosition() {
+    return "top-left";
+  }
+}
+
 /**
  * normalize style ref
  * - basic, geolonia/basic, geolonia/basic/master -> geolonia/basic/master
@@ -100,6 +130,9 @@ const fetchYaml = async () => {
 
 const main = async () => {
   const statusControl = new StatusControl();
+  const forkMeControl = new ForkMeControl({
+    url: "https://github.com/geolonia/vt-style",
+  });
 
   const { yaml, json } = await fetchYaml();
   console.log({ json });
@@ -109,7 +142,8 @@ const main = async () => {
   });
 
   map.on("load", () => {
-    map.addControl(statusControl, "bottom-left");
+    map.addControl(statusControl, "bottom-right");
+    map.addControl(forkMeControl, "top-left");
     statusControl.update("style");
 
     yamlEditor.session.on("change", () => {
