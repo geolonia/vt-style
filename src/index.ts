@@ -1,6 +1,9 @@
 import jsYaml from "js-yaml";
 import { variableFilter } from "./filters/variable";
 
+/**
+ * Type guard to detect valid values
+ */
 const isVTStyleValue = (object: any): object is VT.Value => {
   return Array.isArray(object) ||
     typeof object === 'object' ||
@@ -11,7 +14,7 @@ const isVTStyleValue = (object: any): object is VT.Value => {
 }
 
 /**
- * Plugable YAML -> JSON Transpiler
+ * YAML -> JSON Transpiler
  */
 export class Transpiler {
   private yaml: string
@@ -19,19 +22,23 @@ export class Transpiler {
   private json: string = ""
   private object: VT.Value = null
 
-  static json2yaml = (json: string) => {
+  /**
+   * an experimental utility
+   */
+  static _json2yaml = (json: string) => {
     return jsYaml.dump(jsYaml.load(json, { schema: jsYaml.JSON_SCHEMA }))
   }
 
+  /**
+   * default opitions for a Tranpiler instance
+   */
   static defaultOptions: VT.Options = {
     minify: false,
     filters: [variableFilter]
   }
 
   /**
-   *
-   * @param {string} yaml YAML format data
-   * @param {function} walk
+   * create transpiler instance with options
    */
   constructor(yaml: string, options: Partial<VT.Options> = {}) {
     this.yaml = yaml;
@@ -39,8 +46,7 @@ export class Transpiler {
   }
 
   /**
-   *
-   * @returns {object} parsed YAML object
+   * parse given yaml
    */
   private parse() {
     const parsedObject = jsYaml.load(this.yaml);
@@ -53,9 +59,7 @@ export class Transpiler {
   }
 
   /**
-   * traverse object recursively and apply waker functions.
-   * @param {object}
-   * @returns
+   * traverse parsed object recursively and apply filter functions
    */
   private traverse(parent = this.object) {
     if (typeof parent === 'object' && parent !== null) {
@@ -76,6 +80,9 @@ export class Transpiler {
     return parent
   }
 
+  /**
+   * generate output JSON
+   */
   private generate() {
     if (this.options.minify) {
       this.json = JSON.stringify(this.object)
@@ -84,13 +91,29 @@ export class Transpiler {
     }
   }
 
+  /**
+   * return JSON text
+   */
   toText() {
     return this.json
   }
+
+  /**
+   * return parsed object
+   */
   toJSON() {
     return this.object
   }
+  /**
+   * return YAML text
+   */
+  toYAML() {
+    return this.yaml
+  }
 
+  /**
+   * run transpile
+   */
   transpile() {
     this.parse()
     this.traverse()
@@ -99,5 +122,9 @@ export class Transpiler {
   }
 }
 
-// @ts-ignore
-global.window && (global.window.Transpiler = Transpiler)
+if(global.window) {
+  // @ts-ignore
+  const VT = { ...global.window.VT, Transpiler }
+  // @ts-ignore
+  global.window.VT = VT
+}

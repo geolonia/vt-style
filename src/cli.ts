@@ -37,7 +37,6 @@ const cli = meow(help(), {
   }
 })
 
-
 const inputYamlFilePath = path.resolve(process.cwd(), cli.input[0])
 const outputJsonFilePath = path.resolve(process.cwd(), cli.flags.output)
 const consoleVar = {
@@ -45,6 +44,9 @@ const consoleVar = {
   output: chalk.green(outputJsonFilePath),
 }
 
+/**
+ * run transpiler
+ */
 const convert = async (input: string, output: string, options: Partial<VT.Options>) => {
   const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), options)
   const json = transpiler.transpile().toText()
@@ -55,11 +57,12 @@ const convert = async (input: string, output: string, options: Partial<VT.Option
   }
 }
 
+/**
+ * entry
+ */
 const main = async () => {
 
-  const options = {
-    minify: cli.flags.minify,
-  }
+  const options = { minify: cli.flags.minify }
 
   if (cli.flags.watch) {
     if (!(await fs.stat(inputYamlFilePath).catch(() => false))) {

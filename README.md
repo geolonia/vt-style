@@ -2,7 +2,7 @@
 
 [![build](https://github.com/geolonia/vt-style/actions/workflows/build.yml/badge.svg)](https://github.com/geolonia/vt-style/actions/workflows/build.yml)
 
-VT Style is a YAML to JSON conversion tool with a special focus on maobox style.
+VT Style is a YAML to JSON conversion tool with a special focus on [Mapbox GL style](https://docs.mapbox.com/mapbox-gl-js/style-spec/).
 
 ## Demo
 
@@ -13,7 +13,7 @@ http://geolonia.github.io/vt-style/
 ```shell
 $ vt-style -h
 
-VT Style is a YAML to JSON conversion tool with a special focus on maobox style.
+VT Style is a YAML to JSON conversion tool with a special focus on Mapbox GL style.
 
 Usage
   $ vt-style ./style.yml --output ./style.json
