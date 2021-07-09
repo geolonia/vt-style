@@ -1,7 +1,5 @@
 # [WIP] VT Style
 
-** This project is currntly experimental. Please use `@geolonia/vt-style` package instead of `vt-style`. **
-
 [![build](https://github.com/geolonia/vt-style/actions/workflows/build.yml/badge.svg)](https://github.com/geolonia/vt-style/actions/workflows/build.yml)
 
 VT Style is a YAML to JSON conversion tool with a special focus on [Mapbox GL style](https://docs.mapbox.com/mapbox-gl-js/style-spec/).
@@ -10,31 +8,86 @@ VT Style is a YAML to JSON conversion tool with a special focus on [Mapbox GL st
 
 http://geolonia.github.io/vt-style/
 
+## Features
+
+- All YAML Syntax
+  - Comments(`#`)
+  - Anchor(`&`), Alias(`*`) and Extension(`<<: *`)
+- Variable declaration with `$` prefix
+
+### yaml input
+
+```yaml
+# example
+---
+$bg_color: "#3a3a3a"
+$text_size_small: 12
+$text_size_large: 14
+
+layers:
+  - id: background
+    type: background
+    paint:
+      background-color: $bg_color
+  - id: poi-label
+    type: symbol
+    layout: &text_layout_base
+      text-size: $text_size_small
+      text-color: white
+      text-halo-color: black
+  - id: city-label
+    type: symbol
+    layout:
+      <<: *text_layout_base
+      text-size: $text_size_large
+```
+
+### JSON output
+
+```json
+{
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#3a3a3a"
+      }
+    },
+    {
+      "id": "poi-label",
+      "type": "symbol",
+      "layout": {
+        "text-size": 12,
+        "text-color": "white",
+        "text-halo-color": "black"
+      }
+    },
+    {
+      "id": "city-label",
+      "type": "symbol",
+      "layout": {
+        "text-size": 14,
+        "text-color": "white",
+        "text-halo-color": "black"
+      }
+    }
+  ]
+}
+```
+
 ## Usage
 
 ### CLI
 
 ```shell
-$ npm install vt-style -g
-$ vt-style -h
-
-VT Style is a YAML to JSON conversion tool with a special focus on Mapbox GL style.
-
-Usage
-  $ vt-style ./style.yml --output ./style.json
-  $ vt-style ./style.yml --output ./style.json --watch
-  $ vt-style ./style.yml --output ./style.json --minify --watch
-
-Options
-  --help, -h    Show the help.
-  --watch, -w   Turn on watch mode. vt-style will continue to watch for changes in input source.
-  --minify, -m  Turn on minify flag. vt-style will minify the output JSON.
+$ npx @geolonia/vt-style style.yml -o style.json --watch
 ```
 
 ### Node.js
 
 ```shell
-$ npm install vt-style -S
+$ npm install @geolonia/vt-style -S
 ```
 
 ```typescript
