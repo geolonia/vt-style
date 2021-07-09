@@ -1,10 +1,9 @@
 {
   "name": "vt-style",
   "version": "0.0.0",
-  "description": "A YAML to JSON conversion tool with a special focus on maobox style.",
-  "bin": {
-    "vt-style": "dist/cli.js"
-  },
+  "description": "VT Style is a YAML to JSON conversion tool with a special focus on maobox style.",
+  "main": "dist/index.js",
+  "bin": "dist/cli.js",
   "scripts": {
     "test": "jest",
     "start:docs": "webpack serve",

@@ -6,17 +6,17 @@ import process from 'process'
 import fs from 'fs/promises'
 import chokidar from "chokidar";
 import chalk from 'chalk'
-import { Transpiler } from './vt-style'
-import { notice, warn, error } from './message'
+import { Transpiler } from '.'
+import { notice, warn, error, help } from './lib/message'
 
-const cli = meow(`
-  Usage
-    $ vt-style <input> --output <output>
-
-  Options
-    --watch, -w  Turn on watch mode. vt-style will continue to watch for changes in input source.
-`, {
+const cli = meow(help(), {
   flags: {
+    help: {
+      alias: 'h'
+    },
+    version: {
+      alias: 'v'
+    },
     output: {
       type: 'string',
       alias: 'o',
@@ -45,10 +45,9 @@ const consoleVar = {
   output: chalk.green(outputJsonFilePath),
 }
 
-const convert = async (input: string, output: string) => {
-  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'))
-  transpiler.transpile()
-  const json = transpiler.toText()
+const convert = async (input: string, output: string, options: VT.Options) => {
+  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), undefined, options)
+  const json = transpiler.transpile().toText()
   if (json !== null) {
     return fs.writeFile(output, json)
   } else {
@@ -57,6 +56,11 @@ const convert = async (input: string, output: string) => {
 }
 
 const main = async () => {
+
+  const options: VT.Options = {
+    minify: cli.flags.minify,
+  }
+
   if (cli.flags.watch) {
     if (!(await fs.stat(inputYamlFilePath).catch(() => false))) {
       error(`${consoleVar.input} not found.`);
@@ -66,7 +70,7 @@ const main = async () => {
       .on('add', () => notice(`Started watching ${inputYamlFilePath}.`))
       .on('change', async () => {
         try {
-          await convert(inputYamlFilePath, outputJsonFilePath)
+          await convert(inputYamlFilePath, outputJsonFilePath, options)
           notice(`${consoleVar.output} has been generated.`);
         } catch (err) {
           warn(`Failed to convert ${consoleVar.input}.`);
@@ -75,7 +79,7 @@ const main = async () => {
       })
   } else {
     try {
-      await convert(inputYamlFilePath, outputJsonFilePath)
+      await convert(inputYamlFilePath, outputJsonFilePath, options)
       process.exit(0)
     } catch (err) {
       error(`Failed to convert ${consoleVar.input}.`);
@@ -84,4 +88,5 @@ const main = async () => {
     }
   }
 }
+
 main()

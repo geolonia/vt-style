@@ -3,7 +3,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: path.resolve(__dirname, "src", "vt-style.ts"),
+  entry: path.resolve(__dirname, "src", "index.ts"),
   output: {
     path: path.resolve(__dirname, "docs"),
     filename: "vt-style.min.js",

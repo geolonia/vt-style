@@ -1,5 +1,4 @@
 import jsYaml from "js-yaml";
-import { VT } from '.'
 import { variableFilter } from "./filters/variable";
 
 const isVTStyleValue = (object: any): object is VT.Value => {
@@ -16,7 +15,8 @@ const isVTStyleValue = (object: any): object is VT.Value => {
  */
 export class Transpiler {
   private yaml: string
-  private walks: VT.Filter[]
+  private options: VT.Options
+  private filters: VT.Filter[]
   private json: string = ""
   private object: VT.Value = null
 
@@ -29,12 +29,13 @@ export class Transpiler {
    * @param {string} yaml YAML format data
    * @param {function} walk
    */
-  constructor(yaml: string, walks: VT.Filter | VT.Filter[] = variableFilter) {
+  constructor(yaml: string, filters: VT.Filter | VT.Filter[] = variableFilter, options: VT.Options = { minify: false }) {
     this.yaml = yaml;
-    if (Array.isArray(walks)) {
-      this.walks = walks
+    this.options = options
+    if (Array.isArray(filters)) {
+      this.filters = filters
     } else {
-      this.walks = [walks];
+      this.filters = [filters];
     }
   }
 
@@ -60,8 +61,12 @@ export class Transpiler {
   private traverse(parent = this.object) {
     if (typeof parent === 'object' && parent !== null) {
       for (const key in parent) {
-        // @ts-ignore
-        const nextValue = this.walks.reduce((prev, walk) => walk(key, prev, parent), parent[key])
+        const nextValue = this.filters.reduce(
+          // @ts-ignore
+          (prev, filter) => filter(key, prev, parent),
+          // @ts-ignore
+          parent[key],
+        )
         // @ts-ignore
         parent[key] = nextValue
         if (typeof nextValue === 'object' && nextValue !== null && nextValue !== undefined) {
@@ -73,18 +78,25 @@ export class Transpiler {
   }
 
   private generate() {
-    this.json = JSON.stringify(this.object, null, 2);
+    if (this.options.minify) {
+      this.json = JSON.stringify(this.object)
+    } else {
+      this.json = JSON.stringify(this.object, null, 2);
+    }
   }
 
   toText() {
     return this.json
+  }
+  toJSON() {
+    return this.object
   }
 
   transpile() {
     this.parse()
     this.traverse()
     this.generate()
-    return this.object
+    return this
   }
 }
 

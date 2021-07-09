@@ -73,9 +73,8 @@
         const yaml = editor.getValue()
         const transpiler = new Transpiler(yaml)
         try {
-          transpiler.transpile()
-          const style = transpiler.toText()
-          map.setStyle(JSON.parse(style))
+          const style = transpiler.transpile().toJSON()
+          map.setStyle(style)
         } catch (error) {
           console.error(error)
         }

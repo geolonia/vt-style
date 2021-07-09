@@ -1,18 +1,36 @@
-# `vt-style`
+# VT Style
 
-VTStyle is a YAML to JSON conversion tool with a special focus on maobox style."
+[![build](https://github.com/geolonia/vt-style/actions/workflows/build.yml/badge.svg)](https://github.com/geolonia/vt-style/actions/workflows/build.yml)
+
+VT Style is a YAML to JSON conversion tool with a special focus on maobox style.
+
+## Demo
+
+http://geolonia.github.io/vt-style/
 
 ## Usage
 
 ```shell
-$ vt-style -h # show helps
+$ vt-style -h
+
+VT Style is a YAML to JSON conversion tool with a special focus on maobox style.
+
+Usage
+  $ vt-style ./style.yml --output ./style.json
+  $ vt-style ./style.yml --output ./style.json --watch
+  $ vt-style ./style.yml --output ./style.json --minify --watch
+
+Options
+  --help, -h    Show the help.
+  --watch, -w   Turn on watch mode. vt-style will continue to watch for changes in input source.
+  --minify, -m  Turn on minify flag. vt-style will minify the output JSON.
 ```
 
 ## Development
 
 ```shell
 $ npm test           # run tests
-$ npm run start:docs # start website
+$ npm run start:docs # start live demo
 $ npm run build      # build lib and website
 ```
 
