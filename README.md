@@ -13,6 +13,7 @@ http://geolonia.github.io/vt-style/
 ### CLI
 
 ```shell
+$ npm install vt-style -g
 $ vt-style -h
 
 VT Style is a YAML to JSON conversion tool with a special focus on Mapbox GL style.
@@ -29,6 +30,10 @@ Options
 ```
 
 ### Node.js
+
+```shell
+$ npm install vt-style -S
+```
 
 ```typescript
 import { Transpiler } from "vt-style";
