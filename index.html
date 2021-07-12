@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VT Style | Live DEMO</title>
+  <style>
+    html,
+    body,
+    .container,
+    #yaml-editor,
+    #map,
+    #json-editor {
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+		}
+    #json-editor.style-mode {
+      background-color: rgba(200, 200, 255, 0.2);
+    }
+    #json-editor.feature-mode {
+      background-color: rgba(255, 0, 0, 0.05);
+    }
+		.split-h {
+			display: flex;
+			flex-direction: row;
+		}
+		.gutter {
+			background-color: #eee;
+			background-repeat: no-repeat;
+			background-position: 50%;
+		}
+		.gutter.gutter-horizontal {
+			background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+			cursor: col-resize;
+		}
+    .gutter.gutter-vertical {
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+      cursor: row-resize;
+    }
+    .status-control {
+      font-size: 12px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+      background-color: hsla(0,0%,100%,.5);
+      padding: 2px 6px 1px;
+    }
+	</style>
+</head>
+<body>
+  <div class="split-h container">
+    <div id="left-pane">
+      <div id="yaml-editor"></div>
+    </div>
+    <div id="right-pane" class="split-v container">
+      <div id="right-top-pane">
+        <div
+          id="map"
+          data-hash="on"
+          ></div>
+      </div>
+      <div id="right-bottom-pane">
+        <div id="json-editor" class="style-mode"></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.4/split.min.js" integrity="sha512-HwVfwWgxD3SrpYgpIEGapjIid6YzmKiY4lwoc55rbO/6Y/2ZSgy6PX7zYUV5wqBD4hTsHzDovN6HqEzc/68lUg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js" integrity="sha512-GoORoNnxst42zE3rYPj4bNBm0Q6ZRXKNH2D9nEmNvVF/z24ywVnijAWVi/09iBiVDQVf3UlZHpzhAJIdd9BXqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-searchbox.min.js" integrity="sha512-8Fi8c1NzYiQIbq5f99bgDetUeHJfGx1lfZtmKMudttZjHMujjQYEJ9WAXZMrFmnoRGzijqyRRaGp2H8NR/TDaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/mode-yaml.js" integrity="sha256-95xNUgbfIXvRXJezV53+JM5HPO6PnJ+wZ7/GwdesKAE=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-json.min.js" integrity="sha512-VZZMcLUCIF2nfbd/WddhQvF0/K/hWtKLTMEEc3/ouKX3ceCgEEPJR/c1buV/XDm1lMJrP9ZZ4izN+3VUZxCGHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./vt-style.min.js"></script>
+  <script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
+	<script src="./app.js"></script>
+</body>
+</html>
