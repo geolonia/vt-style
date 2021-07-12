@@ -81,13 +81,13 @@ layers:
 ### CLI
 
 ```shell
-$ npx @geolonia/vt-style style.yml -o style.json --watch
+$ npx vt-style style.yml -o style.json --watch
 ```
 
 ### Node.js
 
 ```shell
-$ npm install @geolonia/vt-style -S
+$ npm install vt-style -S
 ```
 
 ```typescript
