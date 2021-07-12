@@ -1,6 +1,6 @@
 {
   "name": "vt-style",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "VT Style is a YAML to JSON conversion tool with a special focus on Mapbox GL style.",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
