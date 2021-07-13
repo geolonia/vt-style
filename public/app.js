@@ -75,8 +75,9 @@ const fetchYaml = async () => {
   const styleIdentifier = new URLSearchParams(location.search).get("style");
   if (!styleIdentifier) {
     const yaml = await fetch("./style.yml").then((res) => res.text());
-    const json = new window.VT.Transpiler(yaml).toText();
-    return { yaml, json };
+    const transpiler = new window.VT.Transpiler(yaml);
+    const style = await transpiler.transpile();
+    return { yaml, style };
   } else if (styleIdentifier) {
     if (styleIdentifier.match(/^https:\/\//)) {
       styleUrl = styleIdentifier;
@@ -107,9 +108,9 @@ const fetchYaml = async () => {
       styleUrl = fallbackedStyle;
     }
   }
-  const json = await fetch(styleUrl).then((res) => res.text());
-  const yaml = window.VT.Transpiler._json2yaml(json);
-  return { yaml, json };
+  const style = await fetch(styleUrl).then((res) => res.json());
+  const yaml = window.VT.Transpiler._json2yaml(style);
+  return { yaml, style };
 };
 
 const main = async () => {
@@ -135,11 +136,10 @@ const main = async () => {
     url: "https://github.com/geolonia/vt-style",
   });
 
-  const { yaml, json } = await fetchYaml();
-  console.log({ json });
+  const { yaml, style } = await fetchYaml();
   const map = new window.geolonia.Map({
     container: "#map",
-    style: JSON.parse(json),
+    style,
   });
 
   yamlEditor.resize();
@@ -152,11 +152,11 @@ const main = async () => {
     jsonEditor.setStyle("style-mode");
     statusControl.update("style");
 
-    yamlEditor.session.on("change", () => {
+    yamlEditor.session.on("change", async () => {
       const yaml = yamlEditor.getValue();
       try {
         const transpiler = new window.VT.Transpiler(yaml);
-        const style = transpiler.toJSON();
+        const style = await transpiler.transpile();
         map.setStyle(style);
         jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
         statusControl.update("style");
@@ -178,6 +178,6 @@ const main = async () => {
 
   // set initial values
   yamlEditor.setValue(yaml, -1);
-  jsonEditor.setValue(json, -1);
+  jsonEditor.setValue(JSON.stringify(style, null, 2), -1);
 };
 main();
