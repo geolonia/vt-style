@@ -87,3 +87,13 @@ test('should work with variable filter by default', async () => {
   expect(style).toEqual({ foo: "red" })
 })
 
+test('should work with include filter by default', async () => {
+  const yaml = [
+    'foo: "!include ./__test__/assets/includable.yml"',
+  ].join('\n')
+
+  const transpiler = new Transpiler(yaml, {}, { yamlParentDir: './' })
+  const style = await transpiler.transpile()
+  expect(style).toEqual({ foo: { hello: { world: 123 } } })
+})
+

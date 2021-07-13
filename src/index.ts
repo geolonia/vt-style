@@ -1,5 +1,6 @@
 import jsYaml from "js-yaml";
 import { variableFilter } from "./filters/variable";
+import { includeFilter } from "./filters/include";
 
 /**
  * Type guard to detect valid values
@@ -31,15 +32,20 @@ export class Transpiler {
   }
 
   /**
+   * default filters
+   */
+  static defaultFilters = { variableFilter, includeFilter }
+
+  /**
    * default opitions for a Tranpiler instance
    */
   static defaultOptions: VT.Options = {
     minify: false,
-    filters: [variableFilter]
+    filters: Object.values(Transpiler.defaultFilters)
   }
 
   static defaultFilterOptions: VT.FilterOptions = {
-    yamlPath: ""
+    yamlParentDir: null
   }
 
   /**
@@ -77,7 +83,13 @@ export class Transpiler {
       for (const key in parent) {
         const nextValue = await this.options.filters.reduce(
           // @ts-ignore
-          async (prevPromise, filter) => filter(key, await prevPromise, parent, this.filterOptions),
+          async (prevPromise, filter) => filter(
+            key,
+            await prevPromise,
+            parent,
+            this.options,
+            this.filterOptions
+          ),
           // @ts-ignore
           Promise.resolve(parent[key]),
         )
