@@ -48,7 +48,8 @@ const consoleVar = {
  * run transpiler
  */
 const convert = async (input: string, output: string, options: Partial<VT.Options>) => {
-  const styleText = new Transpiler(await fs.readFile(input, 'utf-8'), options).toText()
+  const transpiler = new Transpiler(await fs.readFile(input, 'utf-8'), options)
+  const styleText = JSON.stringify(transpiler.transpile())
   if (styleText !== null) {
     return fs.writeFile(output, styleText)
   } else {

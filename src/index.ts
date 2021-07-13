@@ -19,6 +19,7 @@ const isVTStyleValue = (object: any): object is VT.Value => {
 export class Transpiler {
   private yaml: string
   private options: VT.Options
+  private filterOptions: VT.FilterOptions
   private json: string = ""
   private object: VT.Value = null
 
@@ -37,12 +38,21 @@ export class Transpiler {
     filters: [variableFilter]
   }
 
+  static defaultFilterOptions: VT.FilterOptions = {
+    yamlPath: ""
+  }
+
   /**
    * create transpiler instance with options
    */
-  constructor(yaml: string, options: Partial<VT.Options> = {}) {
+  constructor(
+    yaml: string,
+    options: Partial<VT.Options> = {},
+    filterOptions: Partial<VT.FilterOptions> = {},
+  ) {
     this.yaml = yaml;
     this.options = { ...Transpiler.defaultOptions, ...options }
+    this.filterOptions = { ...Transpiler.defaultFilterOptions, ...filterOptions }
     this.transpile()
   }
 
@@ -62,19 +72,19 @@ export class Transpiler {
   /**
    * traverse parsed object recursively and apply filter functions
    */
-  private traverse(parent = this.object) {
+  private async traverse(parent = this.object) {
     if (typeof parent === 'object' && parent !== null) {
       for (const key in parent) {
-        const nextValue = this.options.filters.reduce(
+        const nextValue = await this.options.filters.reduce(
           // @ts-ignore
-          (prev, filter) => filter(key, prev, parent),
+          async (prevPromise, filter) => filter(key, await prevPromise, parent, this.filterOptions),
           // @ts-ignore
-          parent[key],
+          Promise.resolve(parent[key]),
         )
         // @ts-ignore
         parent[key] = nextValue
         if (typeof nextValue === 'object' && nextValue !== null && nextValue !== undefined) {
-          this.traverse(nextValue)
+          await this.traverse(nextValue)
         }
       }
     }
@@ -115,11 +125,11 @@ export class Transpiler {
   /**
    * run transpile
    */
-  private transpile() {
+  async transpile() {
     this.parse()
-    this.traverse()
+    await this.traverse()
     this.generate()
-    return this
+    return this.toJSON()
   }
 }
 
